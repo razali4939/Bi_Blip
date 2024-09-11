@@ -56,7 +56,7 @@ def combiner_training_fiq(train_dress_types: List[str], val_dress_types: List[st
     :param kwargs: if you use the `targetpad` transform you should prove `target_ratio` as kwarg. If you want to load a
                 fine-tuned version of blip you should provide `blip_model_path` as kwarg.
     """
-    training_start = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    training_start = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     training_path: Path = Path(
         base_path / f"models/combiner_trained_on_fiq_BLIPImgTxt_{training_start}")
     training_path.mkdir(exist_ok=False, parents=True)
@@ -334,7 +334,7 @@ def combiner_training_cirr(projection_dim: int, hidden_dim: int, num_epochs: int
     combiner = Combiner(feature_dim, projection_dim, hidden_dim).to(device, non_blocking=True)
     relative_train_dataset = CIRRDataset('train', 'relative', preprocess)
     relative_train_loader = DataLoader(dataset=relative_train_dataset, batch_size=batch_size, num_workers=num_workers,
-                                       pin_memory=True, collate_fn=collate_fn, drop_last=True, shuffle=True)
+                                       pin_memory=False, collate_fn=collate_fn, drop_last=True, shuffle=True)
 
     # Define the optimizer, the loss and the grad scaler
     optimizer = optim.Adam(combiner.parameters(), lr=combiner_lr)
@@ -496,7 +496,7 @@ if __name__ == '__main__':
     # training args
     parser.add_argument("--num-epochs", default=300, type=int, help="number training epochs")
     parser.add_argument("--combiner-lr", default=2e-5, type=float, help="Combiner learning rate")
-    parser.add_argument("--batch-size", default=1024, type=int, help="Batch size of the Combiner training")
+    parser.add_argument("--batch-size", default=256, type=int, help="Batch size of the Combiner training")
     # combiner training args
     parser.add_argument("--feature-dim", default=256, type=int, help="Feature dimension as input to combiner. Default: inherited from clip_model.visual.output_dim")
     parser.add_argument("--projection-dim", default=640 * 4, type=int, help='Combiner projection dim')

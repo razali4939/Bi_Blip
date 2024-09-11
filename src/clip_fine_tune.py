@@ -58,7 +58,7 @@ def blip_text_finetune_fiq(train_dress_types: List[str], val_dress_types: List[s
     encoder = 'text' # we only finetune BLIP text encoder
     grad_accumulation_step = 1 # gradient accumulation, though we have not used it
 
-    training_start = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    training_start = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     training_path: Path = Path(
         base_path / f"models/blip_text_finetuned_on_fiq_{training_start}")
     training_path.mkdir(exist_ok=False, parents=True)
